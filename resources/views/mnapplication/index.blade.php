@@ -60,7 +60,7 @@
 
     </aside>
     @foreach ($applications as $application)
-        <a href= "{{ route('applications.show', $application)}}" ><h2>{{$application->topic}}</h2></a>
+        <a href= "{{ route('manager.applications.show', $application)}}" ><h2>{{$application->topic}}</h2></a>
 
         <div>{{Str::limit($application->message, 200)}}</div>
     @endforeach

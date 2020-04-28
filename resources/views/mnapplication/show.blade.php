@@ -9,8 +9,5 @@
     @else
         <div>Открытая заявка</div>
     @endif
-    <a href="/download?id={{ $order->id }}" class="btn btn-large pull-right"><font color="Blue">{{$order->file}}</font></a> 
-    {{ Form::model($application, ['url' => route('manager.applications.update'), 'method' => 'PATCH']) }}
-        {{ Form::submit('Принять заявку') }}
-    {{ Form::close() }}
+    <a href="/download?id={{ $application->id }}" class="btn btn-large pull-right"><font color="Blue">{{$application->file_name}}</font></a> 
 @endsection

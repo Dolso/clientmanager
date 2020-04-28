@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('download', 'Download@download');
+Route::get('download', 'DownloadControler@download');
 
 Route::resource('/applications', 'ApplicationController');
 
