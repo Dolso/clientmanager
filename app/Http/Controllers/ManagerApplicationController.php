@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Application;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class ApplicationController extends Controller
+class ManagerApplicationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +14,21 @@ class ApplicationController extends Controller
      */
     public function index(Request $request)
     {
-        $applications = Application::where('id_creator', Auth::id())->get();
+        $applications = Application::orderBy('topic')->get();
+        if ($request->has('closed')) {
+            $applications->where('closed', $request->closed);
+        }
+
+        if ($request->has('answered')) {
+            $applications->where('answered', $request->answered);
+        }
         
-        return view('application.index', compact('applications'));
+        if ($request->has('viewed')) {
+            $applications->where('viewed', $request->viewed); 
+        }
+        
+        
+        return view('mnapplication.index', compact('applications', 'request'));
     }
 
     /**
@@ -27,10 +38,7 @@ class ApplicationController extends Controller
      */
     public function create()
     {
-        //$this->authorize('create', Order::class);        
-
-        $application = new Application();
-        return view('application.create', compact('application'));
+        //
     }
 
     /**
@@ -41,25 +49,7 @@ class ApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        //$this->authorize('create', Order::class);
-
-        $data = $this->validate($request, [
-            'topic' => 'required|min:4',
-            'message' => 'required|min:10',
-        ]);
-        $application = new Application();
-        $application->file_name = $request->file('file')->getClientOriginalName();
-        $path = $request->file('file')->store('files');
-        $application->file_path = $path;
-
-        $application->topic = $request->topic;
-        $application->message = $request->message;
-        $application->id_creator = Auth::id();
-
-        $application->save();
-        //dd($path); 
-
-        return redirect()->route('applications.index');
+        //
     }
 
     /**
@@ -70,7 +60,6 @@ class ApplicationController extends Controller
      */
     public function show(Application $application)
     {
-        
         return view('application.show', compact('application'));
     }
 
@@ -94,7 +83,7 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, Application $application)
     {
-        
+        //
     }
 
     /**

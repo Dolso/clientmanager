@@ -17,7 +17,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('download', 'Download@download');
+
 Route::resource('/applications', 'ApplicationController');
+
+Route::resource('/mn/applications', 'ManagerApplicationController', [
+    'as' => 'manager'
+]);
 
 Auth::routes();
 

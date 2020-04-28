@@ -21,9 +21,11 @@ class CreateApplicationsTable extends Migration
             $table->boolean('closed')->default(false);
             $table->boolean('viewed')->default(false);
             $table->boolean('answered')->default(false);
-            $table->integer('id_creator');
-            $table->integer('id_accepted')->nullable();          
             $table->tinyInteger('status')->default(0);
+            $table->integer('id_creator');
+            $table->integer('id_accepted')->nullable();                      
+            $table->string('file_name', 100)->nullable(); ;
+            $table->string('file_path', 100)->nullable(); ;
         });
     }
 
