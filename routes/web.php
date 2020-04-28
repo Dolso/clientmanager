@@ -25,6 +25,8 @@ Route::resource('/mn/applications', 'ManagerApplicationController', [
     'as' => 'manager'
 ]);
 
+Route::resource('/applications.comments', 'ApplicationCommentController');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

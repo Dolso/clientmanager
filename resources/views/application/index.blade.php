@@ -8,7 +8,7 @@
 @section('content')
     <h1>Список заявок</h1>
     @foreach ($applications as $application)
-        <a href= "{{ route('applications.show', $application)}}" ><h2>{{$application->topic}}</h2></a>
+        <a href= "{{route('applications.show', $application)}}" ><h2>{{$application->topic}}</h2></a>
 
         <div>{{Str::limit($application->message, 200)}}</div>
     @endforeach
