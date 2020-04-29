@@ -7,6 +7,7 @@ use App\ApplicationComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Rights;
+use App\Http\Controllers\ApplicationShipController;
 
 class ApplicationCommentController extends Controller
 {
@@ -52,6 +53,8 @@ class ApplicationCommentController extends Controller
         $comment->id_creator = Auth::id();
 
         $comment->save();
+
+        //ship::('response', $application);
 
         return redirect()->route('applications.show', $application);
     }

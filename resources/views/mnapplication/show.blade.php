@@ -11,7 +11,13 @@
     @endif
 
     <a href="/download?id={{ $application->id }}" class="btn btn-large pull-right"><font color="Blue">{{$application->file_name}}</font></a>
-
+    @if ($application->closed == 0)
+        {{ Form::model($application, ['url' => route('manager.applications.update', $application), 'method' => 'PATCH']) }}
+            {{ Form::label('accept', 'Напишите "принять", для того чтобы закрыть заявку') }}<br>
+            {{ Form::text('accept') }}<br>
+            {{ Form::submit('Принимаю') }}
+        {{ Form::close() }}
+    @endif
     @foreach ($application->comments as $comment)
 
         <div>{{$comment->comment}}</div>

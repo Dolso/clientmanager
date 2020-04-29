@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApplicationShipController;
 
 class ApplicationController extends Controller
 {
@@ -39,15 +40,13 @@ class ApplicationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Application $application)
     {
         //$this->authorize('create', Order::class);
-
         $data = $this->validate($request, [
             'topic' => 'required|min:4',
             'message' => 'required|min:10',
         ]);
-        $application = new Application();
         $application->file_name = $request->file('file')->getClientOriginalName();
         $path = $request->file('file')->store('files');
         $application->file_path = $path;
@@ -57,7 +56,8 @@ class ApplicationController extends Controller
         $application->id_creator = Auth::id();
 
         $application->save();
-        //dd($path); 
+        
+        //ship::('create_application', $application);
 
         return redirect()->route('applications.index');
     }
@@ -94,7 +94,11 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, Application $application)
     {
-        
+        if ($request->closed == 'закрыть') {
+            $application->closed = true;
+            $application->save();
+            return redirect()->route('manager.applications.index');
+        }
     }
 
     /**

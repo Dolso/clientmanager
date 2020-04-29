@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ManagerApplicationController extends Controller
 {
@@ -83,7 +84,11 @@ class ManagerApplicationController extends Controller
      */
     public function update(Request $request, Application $application)
     {
-        //
+        if ($request->accept == 'принять') {
+            $application->id_accepted = Auth::id();
+            $application->save();
+            return redirect()->route('applications.index');
+        }
     }
 
     /**
