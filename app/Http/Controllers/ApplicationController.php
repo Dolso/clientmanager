@@ -57,7 +57,7 @@ class ApplicationController extends Controller
 
         $application->save();
         
-        //ship::('create_application', $application);
+        ApplicationShipController::ship('create_application', $application);
 
         return redirect()->route('applications.index');
     }
@@ -97,7 +97,8 @@ class ApplicationController extends Controller
         if ($request->closed == 'закрыть') {
             $application->closed = true;
             $application->save();
-            return redirect()->route('manager.applications.index');
+            ApplicationShipController::ship('close', $application);
+            return redirect()->route('applications.index');
         }
     }
 

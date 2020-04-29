@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApplicationShipController;
 
 class ManagerApplicationController extends Controller
 {
@@ -87,7 +88,7 @@ class ManagerApplicationController extends Controller
         if ($request->accept == 'принять') {
             $application->id_accepted = Auth::id();
             $application->save();
-            return redirect()->route('applications.index');
+            return redirect()->route('manager.applications.index');
         }
     }
 

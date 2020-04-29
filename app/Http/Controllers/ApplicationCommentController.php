@@ -54,7 +54,7 @@ class ApplicationCommentController extends Controller
 
         $comment->save();
 
-        //ship::('response', $application);
+        ApplicationShipController::ship('response', $application);
 
         return redirect()->route('applications.show', $application);
     }

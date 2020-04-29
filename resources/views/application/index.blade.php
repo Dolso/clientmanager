@@ -9,7 +9,13 @@
     <h1>Список заявок</h1>
     @foreach ($applications as $application)
         <a href= "{{route('applications.show', $application)}}" ><h2>{{$application->topic}}</h2></a>
-
         <div>{{Str::limit($application->message, 200)}}</div>
+        <div>
+            @if ($application->closed == 1)
+                <div>Заявка закрыта</div>
+            @elseif ($application->id_accepted != null)
+                <div>Заявка принята</div>
+            @endif
+        </div>
     @endforeach
 @endsection
