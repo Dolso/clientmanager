@@ -1,12 +1,12 @@
-<!-- Хранится в resources/views/about.blade.php -->
-
 @extends('layouts.app')
 
-<!-- Секция, содержимое которой обычный текст. -->
+@if (Session::has('flash_message'))
+    <font color="Red">{{ Session::get('flash_message') }}</font>
+@endif
 
-<!-- Секция, содержащая HTML блок. Имеет открывающую и закрывающую часть. -->
 @section('content')
     <h1>Список заявок</h1>
+    <a href=" {{ route('applications.create') }}"><h3>Создать заявку</h3></a>
     @foreach ($applications as $application)
         <a href= "{{route('applications.show', $application)}}" ><h2>{{$application->topic}}</h2></a>
         <div>{{Str::limit($application->message, 200)}}</div>

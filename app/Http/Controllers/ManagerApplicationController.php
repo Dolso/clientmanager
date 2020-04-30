@@ -69,7 +69,11 @@ class ManagerApplicationController extends Controller
         else {
             return view('gate.login');
         }
-
+        
+        if ($application->viewed == false) {
+            $application->viewed = true;
+            $application->save();
+        }
         return view('mnapplication.show', compact('application'));
     }
 

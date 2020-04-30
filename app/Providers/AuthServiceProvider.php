@@ -58,8 +58,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('client-store-application', function ($user, $application) {
             $a = Rights::where('id_user', $user->id)->count() == 0;
-            $b = $user->id == $application->id_creator;
-            return $a * $b;
+            return $a;
         });
 
         Gate::define('client-show-application', function ($user, $application) {

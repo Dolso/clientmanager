@@ -45,8 +45,7 @@ class ApplicationController extends Controller
         }
         else {
             return view('gate.login');
-        }      
-
+        }
         $application = new Application();
         return view('application.create', compact('application'));
     }
@@ -60,6 +59,14 @@ class ApplicationController extends Controller
     public function store(Request $request, Application $application)
     {
         Gate::authorize('client-store-application', $application);
+        //проверка времени
+        $last_application = Application::where('id_creator', Auth::id())->orderBy('created_at','DESC')->first();
+        if ($last_application != null) {
+            if ((strtotime('now') - strtotime($last_application->created_at))/3600 < 24) {
+                \Session::flash('flash_message', 'Еще не прошло 24 часа');
+                return redirect()->route('applications.index');
+            }
+        }
 
         $data = $this->validate($request, [
             'topic' => 'required|min:4',
@@ -72,7 +79,6 @@ class ApplicationController extends Controller
         $application->topic = $request->topic;
         $application->message = $request->message;
         $application->id_creator = Auth::id();
-
         $application->save();
         
         ApplicationShipController::ship('create_application', $application);

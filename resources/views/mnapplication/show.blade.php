@@ -10,10 +10,10 @@
     @endif
 
     <a href="/download?id={{ $application->id }}" class="btn btn-large pull-right"><font color="Blue">{{$application->file_name}}</font></a>
-    @if ($application->closed == 0 ?? $application->id_accepted == null)
+    @if ($application->closed == 0 && $application->id_accepted == null)
         <div>
             {{ Form::model($application, ['url' => route('manager.applications.update', $application), 'method' => 'PATCH']) }}
-                {{ Form::label('accept', 'Напишите "принять", для того чтобы закрыть заявку') }}<br>
+                {{ Form::label('accept', 'Напишите "принять", для того чтобы принять заявку') }}<br>
                 {{ Form::text('accept') }}<br>
                 {{ Form::submit('Принимаю') }}
             {{ Form::close() }}

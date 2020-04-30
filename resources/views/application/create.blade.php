@@ -1,18 +1,12 @@
 @extends('layouts.app')
 
 
-
-
 @section('content')
-	@if ($errors->any())
-	    <div>
-	        <ul>
-	            @foreach ($errors->all() as $error)
-	                <li>{{ $error }}</li>
-	            @endforeach
-	        </ul>
-	    </div>
+
+	@if (Session::has('flash_message'))
+		<font color="Red">{{ Session::get('flash_message') }}</font>
 	@endif
+    <a href="{{ route('applications.index') }}"><h3>Мой список заявок</h3></a>
     {{ Form::model($application, ['url' => route('applications.store'), 'files' => 'true']) }}
         {{ Form::label('topic', 'Тема') }}
 		{{ Form::text('topic') }}<br>

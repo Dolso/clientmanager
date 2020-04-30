@@ -1,10 +1,5 @@
-<!-- Хранится в resources/views/about.blade.php -->
-
 @extends('layouts.app')
 
-<!-- Секция, содержимое которой обычный текст. -->
-
-<!-- Секция, содержащая HTML блок. Имеет открывающую и закрывающую часть. -->
 @section('content')
     
     <a href="{{ route('manager.applications.index') }}"><h1>Список заявок</h1></a>
@@ -52,7 +47,6 @@
 
 	    	</div>
 	    		
-	    	</div>
 
 	        <button type="submit" class="btn btn-primary">Filter</button>
 	    </form>
@@ -66,6 +60,8 @@
                 <div>Заявка закрыта</div>
             @elseif ($application->id_accepted != null)
                 <div>Заявка принята</div>
+            @elseif ($application->viewed != false)
+                <div>Заявка просмотрена</div>
             @endif
         </div>
     @endforeach

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Rights;
 use App\Http\Controllers\ApplicationShipController;
+use Illuminate\Support\Facades\Gate;
 
 class ApplicationCommentController extends Controller
 {
@@ -19,7 +20,7 @@ class ApplicationCommentController extends Controller
      */
     public function index(Application $application)
     {
-
+     
     }
 
     /**
@@ -30,8 +31,11 @@ class ApplicationCommentController extends Controller
      */
     public function create(Application $application)
     {
-        $comment = $application->comments()->make();
-        return view('commentapplication.create', compact('application', 'comment'));
+        if (Gate::allows('manager-show-application', $application) OR Gate::allows('client-show-application', $application)) {
+            $comment = $application->comments()->make();
+            return view('commentapplication.create', compact('application', 'comment'));
+        }
+        abort(403);       
     }
 
     /**
@@ -43,10 +47,9 @@ class ApplicationCommentController extends Controller
      */
     public function store(Request $request, Application $application)
     {
-        //$data = $this->validate($request, [
-        //    'topic' => 'required|min:4',
-        //    'message' => 'required|min:10',
-        //]);
+        if (Gate::allows('manager-show-application', $application) OR Gate::allows('client-show-application', $application) == false) {
+            abort(403); 
+        }
         $comment = $application->comments()->make();
  
         $comment->comment = $request->comment;
@@ -55,8 +58,18 @@ class ApplicationCommentController extends Controller
         $comment->save();
 
         ApplicationShipController::ship('response', $application);
+        
+        if (Gate::allows('manager-show-application', $application)) {
+            $application->answered = true;
+            $application->save();
+            return redirect()->route('manager.applications.show', $application);
+        }
 
-        return redirect()->route('applications.show', $application);
+        if (Gate::allows('client-show-application', $application)) {
+            $application->answered = false;
+            $application->save();
+            return redirect()->route('applications.show', $application);
+        }
     }
 
     /**
