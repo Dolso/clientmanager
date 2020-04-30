@@ -2,6 +2,7 @@
 
 @section('content')
 
+    <a href="{{ route('manager.applications.index') }}"><h3>Список заявок</h3></a>
     <h1>{{ $application->name }}</h1>
     <div>{{ $application->message }}</div>
     @if ($application->closed == 1)
@@ -9,7 +10,7 @@
     @endif
 
     <a href="/download?id={{ $application->id }}" class="btn btn-large pull-right"><font color="Blue">{{$application->file_name}}</font></a>
-    @if ($application->closed == 0)
+    @if ($application->closed == 0 ?? $application->id_accepted == null)
         <div>
             {{ Form::model($application, ['url' => route('manager.applications.update', $application), 'method' => 'PATCH']) }}
                 {{ Form::label('accept', 'Напишите "принять", для того чтобы закрыть заявку') }}<br>
@@ -18,6 +19,11 @@
             {{ Form::close() }}
         </div>
     @endif
+
+    <div>
+        <h4>Ответы на заявку</h4>
+    </div>
+
     @foreach ($application->comments as $comment)
 
         <div>{{$comment->comment}}</div>

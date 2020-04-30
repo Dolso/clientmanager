@@ -6,6 +6,8 @@ use App\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApplicationShipController;
+use Illuminate\Support\Facades\Gate;
+use App\Filters\ApplicationFilters;
 
 class ManagerApplicationController extends Controller
 {
@@ -14,22 +16,19 @@ class ManagerApplicationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $applications = Application::orderBy('topic')->get();
-        if ($request->has('closed')) {
-            $applications->where('closed', $request->closed);
+    public function index(ApplicationFilters $filters)
+    {   
+        if (Auth::check()) {
+            if (Gate::denies('manager-index-application')) {
+                return view('gate.right');
+            }
+        }
+        else {
+            return view('gate.login');
         }
 
-        if ($request->has('answered')) {
-            $applications->where('answered', $request->answered);
-        }
-        
-        if ($request->has('viewed')) {
-            $applications->where('viewed', $request->viewed); 
-        }
-        
-        
+        $applications = Application::filter($filters)->get();
+               
         return view('mnapplication.index', compact('applications', 'request'));
     }
 
@@ -62,6 +61,15 @@ class ManagerApplicationController extends Controller
      */
     public function show(Application $application)
     {
+        if (Auth::check()) {
+            if (Gate::denies('manager-show-application', $application)) {
+                return view('gate.right');
+            }
+        }
+        else {
+            return view('gate.login');
+        }
+
         return view('mnapplication.show', compact('application'));
     }
 
@@ -85,6 +93,8 @@ class ManagerApplicationController extends Controller
      */
     public function update(Request $request, Application $application)
     {
+        Gate::authorize('manager-update-application', $application);
+
         if ($request->accept == 'принять') {
             $application->id_accepted = Auth::id();
             $application->save();

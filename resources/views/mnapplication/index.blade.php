@@ -6,9 +6,8 @@
 
 <!-- Секция, содержащая HTML блок. Имеет открывающую и закрывающую часть. -->
 @section('content')
-    {{ $request->closed }}
     
-    <h1>Список заявок</h1>
+    <a href="{{ route('manager.applications.index') }}"><h1>Список заявок</h1></a>
 
     <aside>
 

@@ -6,6 +6,7 @@ use App\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApplicationShipController;
+use Illuminate\Support\Facades\Gate;
 
 class ApplicationController extends Controller
 {
@@ -16,6 +17,15 @@ class ApplicationController extends Controller
      */
     public function index(Request $request)
     {
+        if (Auth::check()) {
+            if (Gate::denies('client-index-application')) {
+                return view('gate.right');
+            }
+        }
+        else {
+            return view('gate.login');
+        }
+
         $applications = Application::where('id_creator', Auth::id())->get();
         
         return view('application.index', compact('applications'));
@@ -28,7 +38,14 @@ class ApplicationController extends Controller
      */
     public function create()
     {
-        //$this->authorize('create', Order::class);        
+        if (Auth::check()) {
+            if (Gate::denies('client-create-application')) {
+                return view('gate.right');
+            }
+        }
+        else {
+            return view('gate.login');
+        }      
 
         $application = new Application();
         return view('application.create', compact('application'));
@@ -42,7 +59,8 @@ class ApplicationController extends Controller
      */
     public function store(Request $request, Application $application)
     {
-        //$this->authorize('create', Order::class);
+        Gate::authorize('client-store-application', $application);
+
         $data = $this->validate($request, [
             'topic' => 'required|min:4',
             'message' => 'required|min:10',
@@ -70,6 +88,14 @@ class ApplicationController extends Controller
      */
     public function show(Application $application)
     {
+        if (Auth::check()) {
+            if (Gate::denies('client-show-application', $application)) {
+                return view('gate.right');
+            }
+        }
+        else {
+            return view('gate.login');
+        }
 
         return view('application.show', compact('application'));      
     }
@@ -94,6 +120,8 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, Application $application)
     {
+        Gate::authorize('client-update-application', $application);
+
         if ($request->closed == 'закрыть') {
             $application->closed = true;
             $application->save();

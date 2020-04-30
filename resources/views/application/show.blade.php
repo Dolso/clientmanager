@@ -2,6 +2,7 @@
 
 @section('content')
 
+    <a href="{{ route('applications.index') }}"><h3>Мой список заявок</h3></a>
     <h1>{{$application->topic}}</h1>
     <div>{{$application->message}}</div>
     <a href="/download?id={{ $application->id }}" class="btn btn-large pull-right"><font color="Blue">{{$application->file_name}}</font></a>
@@ -18,7 +19,7 @@
         </div>
     @endif
     <div>
-        <h4>Ответы на заявки</h4>
+        <h4>Ответы на заявку</h4>
     </div>
     @foreach ($application->comments as $comment)
 
