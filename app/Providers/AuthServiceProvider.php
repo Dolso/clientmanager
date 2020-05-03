@@ -29,48 +29,40 @@ class AuthServiceProvider extends ServiceProvider
         //manager------------------------------------------------------------------------
 
         Gate::define('manager-index-application', function ($user) {
-            $a = Rights::where('id_user', $user->id)->count();
-            return $a == 0 ? false : true;
+            return $user->isManager();
         });
   
         Gate::define('manager-show-application', function ($user, $application) {
-            $a = Rights::where('id_user', $user->id)->count();
-            return $a == 0 ? false : true;
+            return $user->isManager();
         });
 
         Gate::define('manager-update-application', function ($user, $application) {
-            $a = Rights::where('id_user', $user->id)->count();
-            return $a == 0 ? false : true;
+            return $user->isManager();
         });
 
         
         //client-------------------------------------------------------------------------
 
         Gate::define('client-index-application', function ($user) {
-            $a = Rights::where('id_user', $user->id)->count();
-            return $a == 0 ? true : false;
+            return $user->isClient();
         });
   
         Gate::define('client-create-application', function ($user) {
-            $a = Rights::where('id_user', $user->id)->count();
-            return $a == 0 ? true : false;
+            return $user->isClient();
         });
 
         Gate::define('client-store-application', function ($user, $application) {
-            $a = Rights::where('id_user', $user->id)->count() == 0;
-            return $a;
+            return $user->isClient();
         });
 
         Gate::define('client-show-application', function ($user, $application) {
-            $a = Rights::where('id_user', $user->id)->count() == 0;
-            $b = $user->id == $application->id_creator;
-            return $a * $b;
+            $is_creator = $user->id == $application->id_creator;
+            return $is_creator;
         });
 
         Gate::define('client-update-application', function ($user, $application) {
-            $a = Rights::where('id_user', $user->id)->count() == 0;
-            $b = $user->id == $application->id_creator;
-            return $a * $b;
+            $is_creator = $user->id == $application->id_creator;
+            return $is_creator;
         });
     }
 }

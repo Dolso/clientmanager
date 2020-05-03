@@ -19,26 +19,27 @@ class ApplicationShipController extends Controller
      * @param  int  $orderId
      * @return Response
      */
-    public static function ship($status, Application $application)
+    public static function ship ($status, Application $application)
     {
         //если заявка только что созданная
         if ($status == 'create_application') {
-            $manager_ids = Rights::select('id_user')->where('rights','manager')->get();
+            $managers = Rights::where('rights','manager')->get();
             $emails = array();
-            foreach ($manager_ids as $manager_id) {
-                $manager = User::select('email')->where('id', $manager_id->id_user)->first();
-                array_push($emails, $manager);
+            foreach ($managers as $manager) {
+                $manager_email = User::where('id', $manager->id_user)->value('email');
+                array_push($emails, $manager_email);
             }
-            foreach ($emails as $recipient) {
-                Mail::to($recipient)->send(new ApplicationShipped($status, $application));
+            foreach ($emails as $manager_email) {
+                Mail::to($manager_email)->send(new ApplicationShipped($status, $application));
             }
         }
+        
         //при закрытии заявки
         if ($status == 'close') {
             //есть ли менеджер, принявший завку
             if ($application->id_accepted != null) {
-                $manager = User::select('email')->where('id', $application->id_accepted)->first();               
-                Mail::to($manager)->send(new ApplicationShipped($status, $application));
+                $manager_email = User::where('id', $application->id_accepted)->value('email');               
+                Mail::to($manager_email)->send(new ApplicationShipped($status, $application));
             }
         }  
 
@@ -50,14 +51,14 @@ class ApplicationShipController extends Controller
             if (Rights::where('id_user', $comment->id_creator)->count() == 0) {
                 //присылаем менеджеру, который принял заявку
                 $status = 'comment_to_manager';
-                $manager = User::select('email')->where('id', $application->id_accepted)->first();               
-                Mail::to($manager)->send(new ApplicationShipped($status, $application, $comment));
+                $manager_email = User::where('id', $application->id_accepted)->value('email');               
+                Mail::to($manager_email)->send(new ApplicationShipped($status, $application, $comment));
             }
             //если это менеджер, отправляем сообщение юзеру
             else {
                 $status = 'comment_to_client';
-                $client = User::select('email')->where('id', $application->id_creator)->first();
-                Mail::to($client)->send(new ApplicationShipped($status, $application, $comment));
+                $client_email = User::where('id', $application->id_creator)->value('email');
+                Mail::to($client_email)->send(new ApplicationShipped($status, $application, $comment));
             }
         }
 
