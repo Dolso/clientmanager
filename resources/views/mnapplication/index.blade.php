@@ -1,68 +1,75 @@
 @extends('layouts.app')
 
 @section('content')
-    
-    <a href="{{ route('manager.applications.index') }}"><h1>Список заявок</h1></a>
+    <div class="container">
+		<a href="{{ route('manager.applications.index') }}"><h1>Список заявок</h1></a>
 
-    <aside>
+		<aside>
 
-	    <form action="{{ route('manager.applications.index') }}">
-	    
-	    	<div class="form-group">
+			<form action="{{ route('manager.applications.index') }}">
+			
+				<div class="form-group">
 
-	            <label for="is_active" class="from-control">Открытые или закрытые заявки</label>
+					<label for="is_active" class="from-control">Открытые или закрытые заявки</label>
 
-	            <select name="closed">
+					<select name="closed">
 
-	            	<option value="0" {{ request()->closed == '0' ? 'selected' : ''}} > Открытые </option>
-	            	<option value="1" {{ request()->closed == '1' ? 'selected' : ''}} > Закрытые </option>
+						<option value="0" {{ request()->closed == '0' ? 'selected' : ''}} > Открытые </option>
+						<option value="1" {{ request()->closed == '1' ? 'selected' : ''}} > Закрытые </option>
 
-	            </select>
+					</select>
 
-	    	</div>
+				</div>
 
-	    	<div class="form-group">
+				<div class="form-group">
 
-	            <label for="is_active" class="from-control">Ответили ли вы на заявку</label>
+					<label for="is_active" class="from-control">Ответили ли вы на заявку</label>
 
-	            <select name="answered">
+					<select name="answered">
 
-	            	<option value="1" {{ request()->answered == '1' ? 'selected' : ''}} > Ответил </option>
-	            	<option value="0" {{ request()->answered == '0' ? 'selected' : ''}} > Не ответил </option>
+						<option value="1" {{ request()->answered == '1' ? 'selected' : ''}} > Ответил </option>
+						<option value="0" {{ request()->answered == '0' ? 'selected' : ''}} > Не ответил </option>
 
-	            </select>
+					</select>
 
-	    	</div>
+				</div>
 
-	    	<div class="form-group">
+				<div class="form-group">
 
-	            <label for="is_active" class="from-control">Просмотренные или нет</label>
+					<label for="is_active" class="from-control">Просмотренные или нет</label>
 
-	            <select name="viewed">
+					<select name="viewed">
 
-	            	<option value="1" {{ request()->viewed == '1' ? 'selected' : ''}} > Просмотрена </option>
-	            	<option value="0" {{ request()->viewed == '0' ? 'selected' : ''}} > Непросмотрена </option>
+						<option value="1" {{ request()->viewed == '1' ? 'selected' : ''}} > Просмотрена </option>
+						<option value="0" {{ request()->viewed == '0' ? 'selected' : ''}} > Непросмотрена </option>
 
-	            </select>
+					</select>
 
-	    	</div>
-	    		
+				</div>
+					
 
-	        <button type="submit" class="btn btn-primary">Filter</button>
-	    </form>
+				<button type="submit" class="btn btn-primary">Filter</button>
+			</form>
 
-    </aside>
-    @foreach ($applications as $application)
-        <a href= "{{ route('manager.applications.show', $application)}}" ><h2>{{$application->topic}}</h2></a>
-        <div>{{Str::limit($application->message, 200)}}</div>
-        <div>
-            @if ($application->closed == 1)
-                <div>Заявка закрыта</div>
-            @elseif ($application->id_accepted != null)
-                <div>Заявка принята</div>
-            @elseif ($application->viewed != false)
-                <div>Заявка просмотрена</div>
-            @endif
-        </div>
-    @endforeach
+		</aside>
+		@foreach ($applications as $application)
+			<div class="card mb-3" style="max-width: 50rem;">
+				<div class="card-header">
+					@if ($application->closed == 1)
+						<div>Заявка закрыта</div>
+					@elseif ($application->id_accepted != null)
+						<div>Заявка принята</div>
+					@else
+						<div>Заявка открыта</div>
+					@endif
+				</div>  
+				<div class="card-body text-dark">  
+					<a href= "{{route('manager.applications.show', $application)}}" >
+					    <h3 class="card-title">{{$application->topic}}</h3>
+					</a>
+					<p class="card-text">{{$application->message}}</p>
+				</div>  
+			</div>
+		@endforeach
+	</div>
 @endsection
