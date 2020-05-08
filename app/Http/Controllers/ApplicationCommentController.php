@@ -31,7 +31,7 @@ class ApplicationCommentController extends Controller
      */
     public function create(Application $application)
     {
-        if (!(Gate::allows('manager-show-application', $application) OR Gate::allows('client-show-application', $application))) {
+        if (Gate::allows('manager-show-application', $application) OR Gate::allows('client-show-application', $application)) {
             $comment = $application->comments()->make();
             return view('commentapplication.create', compact('application', 'comment'));
         }
@@ -47,7 +47,7 @@ class ApplicationCommentController extends Controller
      */
     public function store(Request $request, Application $application)
     {
-        if (!(Gate::allows('manager-show-application', $application) OR Gate::allows('client-show-application', $application))) {
+        if (Gate::allows('manager-show-application', $application) OR Gate::allows('client-show-application', $application) == false) {
             abort(403); 
         }
         $comment = $application->comments()->make();
